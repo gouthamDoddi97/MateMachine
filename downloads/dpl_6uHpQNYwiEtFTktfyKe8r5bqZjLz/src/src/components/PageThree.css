@@ -1,0 +1,136 @@
+.page-three {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  position: relative;
+}
+
+.document-container {
+  flex: 1;
+  max-width: 900px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.98);
+  padding: 3rem 2rem;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section3 {
+  margin-bottom: 1.5rem;
+  max-width: 580px;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-section4 {
+  margin-bottom: 2rem;
+  max-width: 500px;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 2.5rem;
+}
+
+.hero-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0rem;
+  text-align: left;
+  letter-spacing: -0.02em;
+  max-width: 600px;
+  margin-left: 15%;
+  margin-right: auto;
+}
+
+.hero-title2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: left;
+  letter-spacing: -0.02em;
+  max-width: 600px;
+  margin-left: 15%;
+  margin-right: auto;
+}
+
+.hero-mission {
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 2.75rem;
+  text-align: left;
+  font-weight: 500;
+  max-width: 600px;
+  margin-left: 15%;
+  margin-right: auto;
+}
+
+.hero-section {
+  margin-bottom: 2.5rem;
+  max-width: 500px;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+.hero-section p {
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 300;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .hero-title, .hero-title2 {
+    font-size: 1.6rem;
+    margin-left: auto;
+  }
+  
+  .hero-mission, .hero-mission1 {
+    font-size: 0.9rem;
+    margin-left: auto;
+  }
+  
+  .section-title {
+    font-size: 1.04rem;
+  }
+  
+  .hero-section p, .hero-section3 {
+    font-size: 0.9rem;
+    font-weight: 300;
+  }
+}
+
+@media (max-width: 600px) {
+  .document-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .hero-title, .hero-title2 {
+    font-size: 1.6rem;
+    margin-left: auto;
+  }
+  
+  .hero-mission, .hero-mission1 {
+    font-size: 0.9rem;
+    margin-left: auto;
+  }
+  
+  .section-title {
+    font-size: 1.04rem;
+  }
+  
+  .hero-section p, .hero-section3 {
+    font-size: 0.9rem;
+    font-weight: 300;
+  }
+}
