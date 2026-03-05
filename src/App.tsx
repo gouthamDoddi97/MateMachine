@@ -64,8 +64,16 @@ function App() {
       syncFromLocation()
     }
 
-    const handlePageShow = () => {
-      syncFromLocation(window.history.state?.page as PageNumber | undefined)
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        syncFromLocation(window.history.state?.page as PageNumber | undefined)
+      }
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        syncFromLocation(window.history.state?.page as PageNumber | undefined)
+      }
     }
 
     // Set initial state
@@ -74,10 +82,12 @@ function App() {
     window.addEventListener('popstate', handlePopState)
     window.addEventListener('hashchange', handleHashChange)
     window.addEventListener('pageshow', handlePageShow)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
     return () => {
       window.removeEventListener('popstate', handlePopState)
       window.removeEventListener('hashchange', handleHashChange)
       window.removeEventListener('pageshow', handlePageShow)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [])
 
