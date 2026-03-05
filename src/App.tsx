@@ -97,7 +97,12 @@ function App() {
       syncFromLocation()
     }
 
-    const handlePageShow = () => {
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        window.location.reload()
+        return
+      }
+
       syncFromLocation(window.history.state?.page as PageNumber | undefined)
       window.setTimeout(() => {
         syncFromLocation(window.history.state?.page as PageNumber | undefined)
