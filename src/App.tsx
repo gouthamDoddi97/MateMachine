@@ -28,8 +28,8 @@ function App() {
   const handlePageChange = (page: PageNumber) => {
     window.scrollTo(0, 0)
     setCurrentPage(page)
-    // Push state to browser history
-    window.history.pushState({ page }, '', `#page${page}`)
+    // Update hash to create a history entry (more reliable on iOS Chrome)
+    window.location.hash = `page${page}`
   }
 
   useEffect(() => {
