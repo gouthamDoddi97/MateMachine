@@ -39,8 +39,7 @@ function App() {
       setCurrentPage(page)
     }
 
-    const handlePopState = (event: PopStateEvent) => {
-      const statePage = event.state?.page as PageNumber | undefined
+    const syncFromLocation = (statePage?: PageNumber) => {
       const hashPage = getPageFromHash()
 
       if (statePage) {
@@ -57,11 +56,16 @@ function App() {
       applyPage(1)
     }
 
+    const handlePopState = (event: PopStateEvent) => {
+      syncFromLocation(event.state?.page as PageNumber | undefined)
+    }
+
     const handleHashChange = () => {
-      const hashPage = getPageFromHash()
-      if (hashPage) {
-        applyPage(hashPage)
-      }
+      syncFromLocation()
+    }
+
+    const handlePageShow = () => {
+      syncFromLocation(window.history.state?.page as PageNumber | undefined)
     }
 
     // Set initial state
@@ -69,9 +73,11 @@ function App() {
 
     window.addEventListener('popstate', handlePopState)
     window.addEventListener('hashchange', handleHashChange)
+    window.addEventListener('pageshow', handlePageShow)
     return () => {
       window.removeEventListener('popstate', handlePopState)
       window.removeEventListener('hashchange', handleHashChange)
+      window.removeEventListener('pageshow', handlePageShow)
     }
   }, [])
 
