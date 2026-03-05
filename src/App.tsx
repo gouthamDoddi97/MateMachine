@@ -6,6 +6,8 @@ import './App.css'
 
 type PageNumber = 1 | 2 | 3
 
+const storageKey = 'mm.currentPage'
+
 const getPageFromHash = (): PageNumber | null => {
   if (typeof window === 'undefined') {
     return null
@@ -20,6 +22,28 @@ const getPageFromHash = (): PageNumber | null => {
   return page
 }
 
+const getPageFromStorage = (): PageNumber | null => {
+  if (typeof window === 'undefined') {
+    return null
+  }
+
+  const rawValue = window.sessionStorage.getItem(storageKey)
+  if (!rawValue) {
+    return null
+  }
+
+  const page = Number(rawValue)
+  if (page === 1 || page === 2 || page === 3) {
+    return page
+  }
+
+  return null
+}
+
+const persistPage = (page: PageNumber) => {
+  window.sessionStorage.setItem(storageKey, String(page))
+}
+
 function App() {
   const [currentPage, setCurrentPage] = useState<PageNumber>(() => {
     return getPageFromHash() ?? 1
@@ -28,6 +52,7 @@ function App() {
   const handlePageChange = (page: PageNumber) => {
     window.scrollTo(0, 0)
     setCurrentPage(page)
+    persistPage(page)
     // Update hash to create a history entry (more reliable on iOS Chrome)
     window.location.hash = `page${page}`
   }
@@ -41,14 +66,22 @@ function App() {
 
     const syncFromLocation = (statePage?: PageNumber) => {
       const hashPage = getPageFromHash()
+      const storedPage = getPageFromStorage()
 
       if (statePage) {
         applyPage(statePage)
+        persistPage(statePage)
         return
       }
 
       if (hashPage) {
         applyPage(hashPage)
+        persistPage(hashPage)
+        return
+      }
+
+      if (storedPage) {
+        applyPage(storedPage)
         return
       }
 
@@ -64,15 +97,19 @@ function App() {
       syncFromLocation()
     }
 
-    const handlePageShow = (event: PageTransitionEvent) => {
-      if (event.persisted) {
+    const handlePageShow = () => {
+      syncFromLocation(window.history.state?.page as PageNumber | undefined)
+      window.setTimeout(() => {
         syncFromLocation(window.history.state?.page as PageNumber | undefined)
-      }
+      }, 50)
     }
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         syncFromLocation(window.history.state?.page as PageNumber | undefined)
+        window.setTimeout(() => {
+          syncFromLocation(window.history.state?.page as PageNumber | undefined)
+        }, 50)
       }
     }
 
