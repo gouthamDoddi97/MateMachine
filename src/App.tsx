@@ -4,10 +4,28 @@ import PageTwo from './components/PageTwo'
 import PageThree from './components/PageThree'
 import './App.css'
 
-function App() {
-  const [currentPage, setCurrentPage] = useState<1 | 2 | 3>(1)
+type PageNumber = 1 | 2 | 3
 
-  const handlePageChange = (page: 1 | 2 | 3) => {
+const getPageFromHash = (): PageNumber | null => {
+  if (typeof window === 'undefined') {
+    return null
+  }
+
+  const match = window.location.hash.match(/^#page([1-3])$/)
+  if (!match) {
+    return null
+  }
+
+  const page = Number(match[1]) as PageNumber
+  return page
+}
+
+function App() {
+  const [currentPage, setCurrentPage] = useState<PageNumber>(() => {
+    return getPageFromHash() ?? 1
+  })
+
+  const handlePageChange = (page: PageNumber) => {
     window.scrollTo(0, 0)
     setCurrentPage(page)
     // Push state to browser history
@@ -16,13 +34,33 @@ function App() {
 
   useEffect(() => {
     // Handle browser back/forward buttons
+    const applyPage = (page: PageNumber) => {
+      window.scrollTo(0, 0)
+      setCurrentPage(page)
+    }
+
     const handlePopState = (event: PopStateEvent) => {
-      if (event.state?.page) {
-        window.scrollTo(0, 0)
-        setCurrentPage(event.state.page)
-      } else {
-        // If no state, go to page 1
-        setCurrentPage(1)
+      const statePage = event.state?.page as PageNumber | undefined
+      const hashPage = getPageFromHash()
+
+      if (statePage) {
+        applyPage(statePage)
+        return
+      }
+
+      if (hashPage) {
+        applyPage(hashPage)
+        return
+      }
+
+      // If no state or hash, go to page 1
+      applyPage(1)
+    }
+
+    const handleHashChange = () => {
+      const hashPage = getPageFromHash()
+      if (hashPage) {
+        applyPage(hashPage)
       }
     }
 
@@ -30,7 +68,11 @@ function App() {
     window.history.replaceState({ page: currentPage }, '', `#page${currentPage}`)
 
     window.addEventListener('popstate', handlePopState)
-    return () => window.removeEventListener('popstate', handlePopState)
+    window.addEventListener('hashchange', handleHashChange)
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+      window.removeEventListener('hashchange', handleHashChange)
+    }
   }, [])
 
   return (
